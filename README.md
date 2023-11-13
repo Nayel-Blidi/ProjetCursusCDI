@@ -13,9 +13,11 @@ Root
   - …
 - Images
   - multiImages (clément)
-  - mainMultiImages.py
-  - …py
-- Images_input
-  - Images_output (mask)
+    - mainMultiImages.py
+    - …py
+    - Images_input
   - maskImages (nayel)
+    - mainMaskImages.py
+    - Images_input
+    - Images_output (mask)
 
