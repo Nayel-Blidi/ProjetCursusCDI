@@ -2,20 +2,20 @@
 
 ## Structure Repository Git
 - Root
--- .gitignore
--- .readme
--- .licence
--- main.py
+  - .gitignore
+  - .readme
+  - .licence
+  - main.py
 - Captcha (corentin)
--- mainCaptcha.py (gets inputs
--- …py
--- Images_input
--- …
+  - mainCaptcha.py (gets inputs
+  - …py
+  - Images_input
+  - …
 - Images
--- multiImages (clément)
--- mainMultiImages.py
--- …py
+  - multiImages (clément)
+  - mainMultiImages.py
+  - …py
 - Images_input
--- Images_output (mask)
--- maskImages (nayel)
+  - Images_output (mask)
+  - maskImages (nayel)
 
