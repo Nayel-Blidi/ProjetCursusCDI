@@ -1,7 +1,7 @@
 # ProjetCursusCDI
 
 ## Structure Repository Git
-- Root
+Root
   - .gitignore
   - .readme
   - .licence
