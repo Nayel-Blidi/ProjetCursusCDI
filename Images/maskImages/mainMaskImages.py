@@ -10,8 +10,6 @@ from torchvision import models, transforms
 from PIL import Image
 import matplotlib.pyplot as plt
 
-
-
 local_path = os.path.dirname(os.path.abspath(__file__)) + "/"
 image_path = local_path + "Images_input/"
 print(local_path)
@@ -79,14 +77,13 @@ if "fastercnn" in sys.argv:
     transform = weights.transforms(resize_size=None)
     model = fcn_resnet50(weights=weights, progress=False)
 
-
     fasterrcnn_resnet50_fpn.eval()
     model = model.eval()
 
     class_labels = models.detection.faster_rcnn._COCO_CATEGORIES
     class_labels_resnet50 = models.segmentation.fcn._VOC_CATEGORIES
 
-    # print(class_labels)
+    print(class_labels)
 
     for image in image_list:
 
@@ -107,9 +104,11 @@ if "fastercnn" in sys.argv:
         sem_class_to_idx = {cls: idx for (idx, cls) in enumerate(weights.meta["categories"])}
         normalized_masks = torch.nn.functional.softmax(output, dim=1)
         print(normalized_masks.shape)
+
+        plt.subplots(1, 2)
+        plt.subplot(1, 2, 1)
         plt.plot(normalized_masks[0,:,0,0])
         plt.imshow(normalized_masks[0,0,:,:])
-        plt.show()
 
         # Extract bounding boxes and scores
         boxes = predictions[0]['boxes'].numpy().astype(int)
@@ -131,7 +130,7 @@ if "fastercnn" in sys.argv:
         #     pred_class.append(class_labels[max_pred_label])
 
         # Draw rectangles on the mask
-        plt.figure()
+        plt.subplot(1, 2, 2)
         mask = np.zeros((input_image.size[1], input_image.size[0]))
         print(valid_boxes)
         for box_idx, box in enumerate(valid_boxes):
@@ -146,5 +145,64 @@ if "fastercnn" in sys.argv:
         # break
 
 
+class MaskImages():
+    def __init__(self, image_array) -> None:
+        self.image = image_array
+
+
+    def runPipeline(self):
+        pipeline = [
+            self.loadModelWeigths(),
+            self.composeTensor(),
+            self.evaluateTensor(),
+            self.plotMask(),
+        ]
+        for step in pipeline:
+            step
+        return None
+    
+    def loadModelWeigths(self):
+
+        self.model = models.segmentation.deeplabv3_resnet50(weights = models.segmentation.DeepLabV3_ResNet50_Weights.DEFAULT)
+        self.model.eval()
+        class_labels = models.segmentation.deeplabv3._VOC_CATEGORIES
+        # print(class_labels)
+        return self.model
+
+    def composeTensor(self):
+        transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+        self.image = Image.fromarray(self.image).convert("RGB")
+        self.tensor = transform(self.image).unsqueeze(0)
+
+        return self.tensor
+
+    def evaluateTensor(self):
+        with torch.no_grad():
+            output = self.model(self.tensor)['out'][0]
+            
+        self.mask_predictions = output.argmax(0)
+        self.pred_category = self.mask_predictions.numpy()[-1]
+
+        self.masked_object_labels = [self.class_labels[val] for val in torch.unique(self.mask_predictions) if val != 0]
+
+    def plotMask(self):
+        plt.subplot(1, 2, 1)
+        plt.imshow(self.image)
+        plt.title('Original Image')
+
+        plt.subplot(1, 2, 2)
+        plt.imshow(self.mask_predictions, cmap='viridis')
+        plt.title(f"Mask Prediction: {self.masked_object_labels}")
+        plt.colorbar()
+
+        plt.show()
+
+if __name__ == "__main__":
+    image_array = np.ones((200, 200)) # np.random.randint(0, 255, size=(3, 200, 200))
+    class_obj = MaskImages(image_array=image_array)
+    class_obj.runPipeline()
 
 
