@@ -146,20 +146,39 @@ if "fastercnn" in sys.argv:
 
 
 class MaskImages():
-    def __init__(self, image_array) -> None:
-        self.image = image_array
+    """
+    Takes a numpy array of shape (Height, With, Channels) as input.
+    Returns a 4x4 array where:
+        - Null cells mean no object was detected
+        - Non-null cells means the object of maximum likelyhood appears in this cell
+    Multiple non-null cells may feature the target, if the object is large enough, or if it present multiple times.
 
+    Attributes:
+        - image : the image as a numpy array (H, W, C)
+        - roi_cells : the matrix of Regions Of Interest
+    """
+
+    def __init__(self, image_array) -> None:
+        self.image = np.array(image_array, dtype=np.uint8)
+        self.height = image_array.shape[0]
+        self.width = image_array.shape[1]
+        self.channels = image_array.shape[2]
 
     def runPipeline(self):
+        """
+        Runs all the necessary steps to return the mask of objects of an input array.
+        Returns the RoI 4x4 array.
+        """
         pipeline = [
             self.loadModelWeigths(),
             self.composeTensor(),
             self.evaluateTensor(),
-            self.plotMask(),
+            self.getROICells()
         ]
         for step in pipeline:
             step
-        return None
+
+        return self.roi_cells
     
     def loadModelWeigths(self):
 
@@ -174,8 +193,11 @@ class MaskImages():
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
-        self.image = Image.fromarray(self.image).convert("RGB")
+        if self.channels == 1:
+            self.image = Image.fromarray(self.image).convert("RGB")
+        # self.tensor = torch.from_numpy(self.image)
         self.tensor = transform(self.image).unsqueeze(0)
+        print(self.tensor.size())
 
         return self.tensor
 
@@ -187,6 +209,22 @@ class MaskImages():
         self.pred_category = self.mask_predictions.numpy()[-1]
 
         self.masked_object_labels = [self.class_labels[val] for val in torch.unique(self.mask_predictions) if val != 0]
+
+    def getROICells(self):
+
+        self.roi_cells = np.zeros((4, 4))
+
+        for vertical_roi in range(4):
+            for horizontal_roi in range(4):
+                bottom_roi_coo, top_roi_coo = vertical_roi/4*self.height, (vertical_roi+1)/4*self.height
+                left_roi_coo, right_roi_coo = horizontal_roi/4*self.width, (horizontal_roi+1)/4*self.width
+
+                roi_mask = self.mask_predictions[round(bottom_roi_coo):round(top_roi_coo), round(left_roi_coo):round(right_roi_coo)].numpy()
+
+                if np.all(roi_mask != 0):
+                    self.roi_cells[vertical_roi, horizontal_roi] = 1
+
+        return self.roi_cells
 
     def plotMask(self):
         plt.subplot(1, 2, 1)
@@ -201,8 +239,12 @@ class MaskImages():
         plt.show()
 
 if __name__ == "__main__":
-    image_array = np.ones((200, 200)) # np.random.randint(0, 255, size=(3, 200, 200))
+    image_array = np.ones((200, 300, 3))*100 
+    image_array = np.random.randint(0, 255, size=(200, 200, 3))
+
     class_obj = MaskImages(image_array=image_array)
-    class_obj.runPipeline()
+    roi_cells = class_obj.runPipeline()
+    class_obj.plotMask()
+    print(roi_cells)
 
 
