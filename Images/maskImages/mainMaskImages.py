@@ -185,7 +185,8 @@ class MaskImages():
         self.model = models.segmentation.deeplabv3_resnet50(weights = models.segmentation.DeepLabV3_ResNet50_Weights.DEFAULT)
         self.model.eval()
         class_labels = models.segmentation.deeplabv3._VOC_CATEGORIES
-        # print(class_labels)
+        if __name__ == "__main__":
+            print(class_labels)
         return self.model
 
     def composeTensor(self):
