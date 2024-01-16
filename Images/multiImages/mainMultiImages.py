@@ -3,10 +3,13 @@ from PIL import Image
 from torchvision import transforms
 import numpy as np
 import cv2
+import os
 
-image1 = Image.open("Bicycle_1.png").convert('RGB')
-image2 = Image.open("dog.jpg").convert('RGB')
-input_images = [image1, image2]
+if __name__ == "__main__":
+
+    image1 = Image.open("Bicycle_1.png").convert('RGB')
+    image2 = Image.open("dog.jpg").convert('RGB')
+    input_images = [image1, image2]
 
 #%%
 
@@ -48,7 +51,7 @@ class solve_capcha_9_images:
                 
             probabilities = torch.nn.functional.softmax(output[0], dim=0)
     
-            with open("Categories.txt", "r") as f:
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "Categories.txt"), "r") as f:
                 categories = [s.strip() for s in f.readlines()]
             top5_prob, top5_catid = torch.topk(probabilities, 5)
             results = []
@@ -86,12 +89,14 @@ class solve_capcha_9_images:
         return dico   
         
 #%%
+    
 
-solveur = solve_capcha_9_images(input_images, "Mountain")
+if __name__ == "__main__":
+    solveur = solve_capcha_9_images(input_images, "Mountain")
 
-print(solveur.categories)
+    print(solveur.categories)
 
-print(solveur.images_to_mark)
+    print(solveur.images_to_mark)
         
         
         
