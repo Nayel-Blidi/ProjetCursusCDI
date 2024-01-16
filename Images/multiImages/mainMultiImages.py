@@ -75,17 +75,17 @@ class solve_capcha_9_images:
         
     def create_dico_categories(self):
         dico = {}
-        dico["Bicycle"] = ["bicycle-built-for-two", "mountain bike", "tricycle"]
-        dico["Bridge"] = ["suspension bridge", "steel arch bridge", "viaduct"]
-        dico["Bus"] = ["school bus", "trolleybus"]
-        dico["Car"] = ["convertible", "sports car", "limousine", "racer", "minivan", "golfcart", "mobile home", "pickup", "cab", "car mirror"]
-        dico["Chimney"] = ["fireplace", "smokestack"]
-        dico["Crosswalk"] = ["pedestrian crossing", "zebra crossing"]
-        dico["Hydrant"] = ["fire hydrant"]
-        dico["Motorcycle"] = ["motorcycle"]
-        dico["Mountain"] = ["mountain", "peak", "summit"]
-        dico["Palm"] = ["palm tree", "date palm"]
-        dico["Traffic Light"] = ["traffic light"]
+        dico["bicycle"] = ["bicycle-built-for-two", "mountain bike", "tricycle"]
+        dico["bridge"] = ["suspension bridge", "steel arch bridge", "viaduct"]
+        dico["bus"] = ["school bus", "trolleybus"]
+        dico["car"] = ["convertible", "sports car", "limousine", "racer", "minivan", "golfcart", "mobile home", "pickup", "cab", "car mirror"]
+        dico["chimney"] = ["fireplace", "smokestack"]
+        dico["crosswalk"] = ["pedestrian crossing", "zebra crossing"]
+        dico["hydrant"] = ["fire hydrant"]
+        dico["motorcycle"] = ["motorcycle"]
+        dico["mountain"] = ["mountain", "peak", "summit"]
+        dico["palm"] = ["palm tree", "date palm"]
+        dico["traffic light"] = ["traffic light"]
         return dico   
         
 #%%

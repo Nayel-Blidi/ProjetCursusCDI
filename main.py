@@ -1,10 +1,12 @@
 from Images.maskImages.mainMaskImages import MaskImages
 from Images.multiImages.mainMultiImages import solve_capcha_9_images 
+from scrap import myExtractor
 
 from PIL import Image
 import numpy as np
 import cv2
 import os
+import matplotlib.pyplot as plt
 
 """
 OUTPUT mainMultiImages
@@ -31,6 +33,25 @@ OUTPUT mainMaskImages
 # solveur.images_to_mark
 
 def main():
+    my_object = myExtractor('ReCAPTCHA demo.html')
+    pb_type, la_liste, consigne = my_object.extractProblem()
+    print(pb_type, consigne)
+    
+    if pb_type == 'multiImages':
+        list_images = [Image.fromarray(image, mode="RGB") for image in la_liste]
+        solveur = solve_capcha_9_images(list_images=list_images, target=consigne)
+        solveur.images_to_mark
+        
+        for i in solveur.images_to_mark:
+            plt.figure()
+            plt.title(consigne)
+            plt.imshow(la_liste[i])
+        
+    elif pb_type == 'maskImages':
+        class_obj = MaskImages(image_array=la_liste[0])
+        roi_cells = class_obj.runPipeline()
+        class_obj.plotMask()
+        print(roi_cells)
 
     return 0
 

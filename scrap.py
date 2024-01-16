@@ -67,11 +67,11 @@ class myExtractor:
                             'bicycle',
                             'boats',
                             'bus',
-                            'cars',
-                            'fire hydrant',
+                            'car',
+                            'hydrant',
                             'motorcycle',
                             'stairs',
-                            'traffic lights']
+                            'traffic light']
         with open(self._pb_type_path, 'r') as fichier:
             contenu = fichier.read()
             

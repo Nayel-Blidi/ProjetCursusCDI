@@ -184,9 +184,9 @@ class MaskImages():
 
         self.model = models.segmentation.deeplabv3_resnet50(weights = models.segmentation.DeepLabV3_ResNet50_Weights.DEFAULT)
         self.model.eval()
-        class_labels = models.segmentation.deeplabv3._VOC_CATEGORIES
+        self.class_labels = models.segmentation.deeplabv3._VOC_CATEGORIES
         if __name__ == "__main__":
-            print(class_labels)
+            print(self.class_labels)
         return self.model
 
     def composeTensor(self):
@@ -221,8 +221,8 @@ class MaskImages():
                 left_roi_coo, right_roi_coo = horizontal_roi/4*self.width, (horizontal_roi+1)/4*self.width
 
                 roi_mask = self.mask_predictions[round(bottom_roi_coo):round(top_roi_coo), round(left_roi_coo):round(right_roi_coo)].numpy()
-
-                if np.all(roi_mask != 0):
+                
+                if not np.array_equal(roi_mask,  np.zeros(roi_mask.shape)):
                     self.roi_cells[vertical_roi, horizontal_roi] = 1
 
         return self.roi_cells
