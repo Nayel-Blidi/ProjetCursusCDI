@@ -6,6 +6,14 @@ import numpy as np
 import cv2
 import os
 
+"""
+OUTPUT mainMultiImages
+['Bicycle', 'Bridge', 'Bus', 'Car', 'Chimney', 'Crosswalk', 'Hydrant', 'Motorcycle', 'Mountain', 'Palm', 'Traffic Light']
+
+OUTPUT mainMaskImages 
+['__background__', 'aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car', 'cat', 'chair', 
+'cow', 'diningtable', 'dog', 'horse', 'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor']
+"""
 
 # CAS D'UTILISATION : ENIGME 4x4 (maskImage)
 # - créer un objet de classe mask avec en input une np array de format cv2 (height, width, channels)

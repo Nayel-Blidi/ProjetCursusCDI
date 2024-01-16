@@ -93,7 +93,7 @@ class solve_capcha_9_images:
 
 if __name__ == "__main__":
     solveur = solve_capcha_9_images(input_images, "Mountain")
-
+    
     print(solveur.categories)
 
     print(solveur.images_to_mark)
