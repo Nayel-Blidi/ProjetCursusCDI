@@ -114,7 +114,7 @@ class myExtractor:
                             'bicycle',
                             'boats',
                             'bus',
-                            'car',
+                            'cars',
                             'hydrant',
                             'motorcycle',
                             'stairs',
@@ -124,7 +124,7 @@ class myExtractor:
         with open(self._pb_type_path, 'r') as file:
             content = file.read()
             occurences = {string: content.count(string) for string in list_instruction}
-            
+
             # Deducing that the most frequent is the problem instruction
             most_frequent = max(occurences, key=occurences.get)
 
